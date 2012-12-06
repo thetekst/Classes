@@ -539,16 +539,11 @@
 			
 			if (empty($product->slug) === false) {
 				$pN = (string)$product->slug;
-				$pN = translitIt($pN);
-				//$pN = mb_convert_case($pN, MB_CASE_TITLE, 'UTF-8');
-                $productRuRuClass->slug        = $pN;
+                $productRuRuClass->slug        = translitIt($pN);
             }
-			else
-			{
+			else {
 				$pN = (string)$product->product_name;
-				$pN = translitIt($pN);
-				//$pN = mb_convert_case($pN, MB_CASE_TITLE, 'UTF-8');
-				$productRuRuClass->slug		= $pN;
+				$productRuRuClass->slug		= translitIt($pN);
 			}
 				
 			

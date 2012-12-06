@@ -1,5 +1,5 @@
 <?php
-function translitIt($str) 
+function translitIt($str)
 {
     $tr = array(
         "А"=>"A","Б"=>"B","В"=>"V","Г"=>"G",
@@ -16,6 +16,15 @@ function translitIt($str)
         "ц"=>"ts","ч"=>"ch","ш"=>"sh","щ"=>"sch","ъ"=>"y",
         "ы"=>"yi","ь"=>"","э"=>"e","ю"=>"yu","я"=>"ya"
     );
-    return strtr($str,$tr);
+	
+	$strToLower =  strtr($str,$tr);
+	$toTrim = trim($strToLower);
+	$strToLower = mb_convert_case($toTrim, MB_CASE_LOWER, 'UTF-8');
+	
+	$removeSimbols = preg_replace('/([^0-9a-zA-Z\s])/', '', $strToLower);
+	$replaceSpaces = preg_replace('/\s/', '-', $removeSimbols);
+
+    return $replaceSpaces;
 }
+
 ?>
