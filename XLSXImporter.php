@@ -51,7 +51,11 @@
                            /*$this->managePriceAndCurrency($productId, $oneProduct->product_price, $oneProduct->product_currency);*/
                            /*$discountId = $this->manageDiscount($oneProduct->product_discount_id, $oneProduct->is_percent);*/
                            $this->loadProductIntoDb($oneProduct, $productId);
-						   $this->loadProductIntoDbRuRU($oneProduct, $productId);
+						   
+						   
+							$this->loadProductIntoDbRuRU($oneProduct, $productId, $this->ruRUIdIsEmpty($productId));
+						   
+						   
 						   //$this->getProductName($productId, $oneProduct->product_name, $oneProduct->product_s_desc, $oneProduct->product_desc);
 						   
 
@@ -142,6 +146,14 @@
 
             return $this->db->loadResult();
         }//end getProductIdFromSku()
+		
+		function ruRUIdIsEmpty($product_sku_id) {
+			$productIdQuery = 'select * from #__'.$this->vm_prefix.'_products_ru_ru ru where ru.virtuemart_product_id = "'.$product_sku_id.'"';
+			
+            $this->db->setQuery($productIdQuery);
+
+            return $this->db->loadResult();
+		}
 		
 		protected function getProductName($productId, $product_name, $product_s_desc, $product_desc) {
 		
@@ -517,10 +529,11 @@
             return $productId;
         }//end loadProductIntoDb
         
-		protected function loadProductIntoDbRuRU($product, $productId = null){
+		protected function loadProductIntoDbRuRU($product, $productId = null, $ruRUIdIsEmpty){
 
 			$productRuRuClass = new stdClass();
-
+			
+			
             if(empty($productId) == false) {
                 $productRuRuClass->virtuemart_product_id = $productId;
             }
@@ -550,9 +563,10 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 						file_put_contents('log.txt',var_export($productRuRuClass,true), FILE_APPEND);
 						file_put_contents('log.txt',"\n\n", FILE_APPEND);
+						file_put_contents('log.txt',var_export($ruRUIdIsEmpty."\n\n",true), FILE_APPEND);
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
-            if (empty ($productId) === true) {
+            if (empty ($productId) === false) {
                 if (!$this->db->updateObject("#__".$this->vm_prefix."_products_ru_ru",$productRuRuClass, 'virtuemart_product_id')) {
 					throw new Exception( $this->db->stderr() );
 				}
@@ -591,4 +605,5 @@
 
 //---------------------------
 */
+
 ?>
